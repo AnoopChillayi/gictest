@@ -1,0 +1,16 @@
+{
+    "name": "gic-demo-server",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "body-parser": "latest",
+        "cors": "latest",
+        "express": "latest",
+        "lodash": "^4.17.21",
+        "nodemon": "latest",
+        "uuid": "^8.3.2"
+    },
+    "scripts": {
+        "start": "nodemon ./server.js"
+    }
+}
