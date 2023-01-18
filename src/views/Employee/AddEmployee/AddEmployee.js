@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-    Alert,
-    AlertTitle,
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
-    FormLabel,
-    Radio,
-    RadioGroup,
-    Stack,
-    Typography
-} from '@mui/material';
+import { FormControl, FormControlLabel, FormHelperText, FormLabel, Radio, RadioGroup, Stack, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { ERROR_MESSAGES, ROUTE_PATHS } from 'appConstants';
 import MainCard from 'ui-component/cards/MainCard';
@@ -20,6 +9,8 @@ import { useForm, Controller } from 'react-hook-form';
 import CustomTextField from 'ui-component/CustomTextField/CustomTextField';
 import { LoadingButton } from '@mui/lab';
 import { useParams } from 'react-router';
+import ErrorDisplay from 'ui-component/ErrorDisplay/ErrorDisplay';
+import { usePrompt } from 'hooks/usePrompt';
 
 const AddEmployee = () => {
     const params = useParams();
@@ -29,11 +20,12 @@ const AddEmployee = () => {
     const {
         control,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isDirty, isSubmitting },
         reset
     } = useForm();
     const navigate = useNavigate();
 
+    usePrompt('Hello from usePrompt -- Are you sure you want to leave?', isDirty && !isSubmitting);
     const getEmployeeDetails = async (empId) => {
         setAddEmployeeInProgress(true);
         try {
@@ -131,14 +123,19 @@ const AddEmployee = () => {
                             value: 100,
                             message: 'Maximum length is 150 charecters'
                         }
+                        // pattern:
+                        //     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                        // // pattern: {
+                        // //     value: '/^w+[w-.]*@w+((-w+)|(w*)).[a-z]{2,3}$/i',
+                        // //     message: 'please enter valid mail'
+                        // // }
                     }}
                     required
                     fullWidth
-                    type="email"
+                    type="text"
                     id="email"
                     label="Email Address"
                     name="email"
-                    autoComplete="email"
                 />
                 <FormHelperText error={errors?.email}>{errors?.email?.message}</FormHelperText>
 
@@ -182,12 +179,7 @@ const AddEmployee = () => {
                     </LoadingButton>
                 </Stack>
 
-                {addEmployeeError && (
-                    <Alert severity="error">
-                        <AlertTitle>Error</AlertTitle>
-                        {addEmployeeError}
-                    </Alert>
-                )}
+                <ErrorDisplay titleMessage={ERROR_MESSAGES.EMPLOYEE_ADD_ERROR} errorMessage={addEmployeeError} />
             </Box>
         </MainCard>
     );

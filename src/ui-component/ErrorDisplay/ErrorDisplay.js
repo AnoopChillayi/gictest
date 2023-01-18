@@ -6,7 +6,9 @@ const ErrorDisplay = ({ titleMessage, errorMessage, retryAction = null }) => {
         <Alert severity="error">
             <AlertTitle>{titleMessage}</AlertTitle>
             {errorMessage}
-            <Button onClick={retryAction}>Retry</Button>
+            {retryAction && <Button onClick={retryAction}>Retry</Button>}
+
+            <AlertTitle>IN CASE IF YOU ARE NOT STARTED THE BACKEND API, PLEASE START IT BY MOVING TO demo-server folder</AlertTitle>
         </Alert>
     );
 };

@@ -14,6 +14,6 @@ export const API_END_POINTS = {
 
 export const ERROR_MESSAGES = {
     SERVER_ERROR: 'Some error in server..',
-
-    EMPLOYEE_LIST_LOADING_ERROR: 'Unable to get Employee list'
+    EMPLOYEE_LIST_LOADING_ERROR: 'Unable to get Employee list',
+    EMPLOYEE_ADD_ERROR: 'Unable to add Employee '
 };

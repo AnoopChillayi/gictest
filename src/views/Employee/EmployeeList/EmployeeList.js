@@ -20,7 +20,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { employeeService } from 'services/employeeService.service';
 import { useTheme } from '@emotion/react';
 import CustomDialog from 'ui-component/CustomDialog/CustomDialog';
-import { EMPLOYEE_DELETE_MODAL } from '../UsersPageConstants';
+import { EMPLOYEE_DELETE_MODAL } from '../EmployeePageConstants';
 
 const EmployeeList = () => {
     const navigate = useNavigate();
