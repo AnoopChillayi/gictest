@@ -11,6 +11,7 @@ import { LoadingButton } from '@mui/lab';
 import { useParams } from 'react-router';
 import ErrorDisplay from 'ui-component/ErrorDisplay/ErrorDisplay';
 import { usePrompt } from 'hooks/usePrompt';
+import SaveIcon from '@mui/icons-material/Save';
 
 const AddEmployee = () => {
     const params = useParams();
@@ -85,7 +86,7 @@ const AddEmployee = () => {
                     name="firstName"
                     // autoFocus
                 />
-                <FormHelperText error={errors?.firstName} sx={{ mb: 2 }}>
+                <FormHelperText error={!!errors?.firstName} sx={{ mb: 2 }} variant="outlined">
                     {errors?.firstName?.message}
                 </FormHelperText>
 
@@ -110,7 +111,7 @@ const AddEmployee = () => {
                     name="lastName"
                     // autoFocus
                 />
-                <FormHelperText error={errors?.lastName} sx={{ mb: 2 }}>
+                <FormHelperText error={!!errors?.lastName} sx={{ mb: 2 }}>
                     {errors?.lastName?.message}
                 </FormHelperText>
 
@@ -122,13 +123,14 @@ const AddEmployee = () => {
                         maxLength: {
                             value: 100,
                             message: 'Maximum length is 150 charecters'
+                        },
+
+                        validate: (value) => {
+                            return (
+                                [/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/].every((pattern) => pattern.test(value)) ||
+                                'Please enter valid mail'
+                            );
                         }
-                        // pattern:
-                        //     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                        // // pattern: {
-                        // //     value: '/^w+[w-.]*@w+((-w+)|(w*)).[a-z]{2,3}$/i',
-                        // //     message: 'please enter valid mail'
-                        // // }
                     }}
                     required
                     fullWidth
@@ -137,49 +139,63 @@ const AddEmployee = () => {
                     label="Email Address"
                     name="email"
                 />
-                <FormHelperText error={errors?.email}>{errors?.email?.message}</FormHelperText>
+
+                <FormHelperText error={!!errors?.email}>{errors?.email?.message}</FormHelperText>
 
                 <CustomTextField
                     control={control}
                     errors={errors}
                     rules={{
-                        required: 'Phone Number required'
+                        required: 'Phone Number required',
+
+                        validate: (value) => {
+                            return (
+                                [/\+65(6|8|9)\d{7}/g].every((pattern) => pattern.test(value)) ||
+                                'Please enter valid Singapore Phone ,Eg:+6561234567'
+                            );
+                        }
                     }}
                     required
                     fullWidth
-                    type="phone"
+                    type="text"
                     id="phone"
                     label="Phone Number"
                     name="phone"
                 />
-                <FormHelperText error={errors?.phone}>{errors?.phone?.message}</FormHelperText>
+                <FormHelperText error={!!errors?.phone}>{errors?.phone?.message}</FormHelperText>
 
-                <FormControl component="fieldset">
-                    <FormLabel component="legend">Gender</FormLabel>
-                    <Controller
-                        rules={{ required: 'Gender Required' }}
-                        required
-                        control={control}
-                        errors={errors}
-                        name="gender"
-                        id="gender"
-                        render={({ field }) => (
-                            <RadioGroup {...field}>
-                                <FormControlLabel value="Male" control={<Radio />} label="Male" />
-                                <FormControlLabel value="Female" control={<Radio />} label="Female" />
-                            </RadioGroup>
-                        )}
-                    />
-                    <FormHelperText error={errors?.gender}>{errors?.gender?.message}</FormHelperText>
-                </FormControl>
+                <FormLabel component="legend">Gender</FormLabel>
+                <Controller
+                    rules={{ required: 'Gender Required' }}
+                    required
+                    defaultValue=""
+                    control={control}
+                    name="gender"
+                    id="gender"
+                    render={({ field }) => (
+                        <RadioGroup {...field}>
+                            <FormControlLabel value="Male" control={<Radio />} label="Male" />
+                            <FormControlLabel value="Female" control={<Radio />} label="Female" />
+                        </RadioGroup>
+                    )}
+                />
+
+                <FormHelperText error={!!errors?.gender}>{errors?.gender?.message}</FormHelperText>
 
                 <Stack direction="row" spacing={6} alignItems="center" sx={{ mt: 2, mb: 2 }}>
-                    <LoadingButton type="submit" variant="contained" color="inherit" loading={addEmployeeInProgress} loadingPosition="end">
+                    <LoadingButton
+                        type="submit"
+                        variant="contained"
+                        color="inherit"
+                        loading={addEmployeeInProgress}
+                        loadingPosition="end"
+                        endIcon={<SaveIcon />}
+                    >
                         <Typography sx={{ fontWeight: 'bold' }}> {params?.id ? 'Update Employee' : 'Add Employee'}</Typography>
                     </LoadingButton>
                 </Stack>
 
-                <ErrorDisplay titleMessage={ERROR_MESSAGES.EMPLOYEE_ADD_ERROR} errorMessage={addEmployeeError} />
+                {addEmployeeError && <ErrorDisplay titleMessage={ERROR_MESSAGES.EMPLOYEE_ADD_ERROR} errorMessage={addEmployeeError} />}
             </Box>
         </MainCard>
     );
